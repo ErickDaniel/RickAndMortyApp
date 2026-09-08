@@ -63,16 +63,17 @@ fun CharacterListScreen(
                     LoadingContent()
                 }
                 is CharacterListUiState.Success -> {
-                    //TODO: Add Success
+                    if(uiState.characters.isEmpty()) {
+                        EmptyContent()
+                    }
                 }
                 is CharacterListUiState.Error -> {
-
+                    ErrorContent(
+                        "Error",
+                        onRetry
+                    )
                 }
             }
-            ErrorContent(
-                "Error",
-                onRetry
-            )
         }
     }
 }
@@ -121,5 +122,20 @@ fun ErrorContent(
                 text = stringResource(R.string.retry)
             )
         }
+    }
+}
+
+@Composable
+fun EmptyContent(
+    modifier: Modifier = Modifier
+){
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.no_characters_found),
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
