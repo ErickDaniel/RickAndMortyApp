@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -65,9 +66,13 @@ fun CharacterListScreen(
                     //TODO: Add Success
                 }
                 is CharacterListUiState.Error -> {
-                    //TODO: Add Error
+
                 }
             }
+            ErrorContent(
+                "Error",
+                onRetry
+            )
         }
     }
 }
@@ -87,5 +92,34 @@ fun LoadingContent(
             modifier = Modifier.padding(top = 16.dp),
             style = MaterialTheme.typography.bodyLarge
         )
+    }
+}
+
+@Composable
+fun ErrorContent(
+    message: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(R.string.something_went_wrong),
+            style = MaterialTheme.typography.headlineSmall
+        )
+
+        Button(
+            onClick = onRetry,
+            modifier = Modifier.padding(top = 24.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.retry)
+            )
+        }
     }
 }
