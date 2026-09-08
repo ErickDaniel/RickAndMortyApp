@@ -1,4 +1,4 @@
-package com.erickjuarez.rickandmorty.data.remote
+package com.erickjuarez.rickandmorty.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 
