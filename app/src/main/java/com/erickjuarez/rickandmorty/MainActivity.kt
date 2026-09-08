@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.erickjuarez.rickandmorty.ui.characters.CharacterList
 import com.erickjuarez.rickandmorty.ui.characters.CharacterListViewModel
 import com.erickjuarez.rickandmorty.ui.characters.CharacterListViewModelFactory
 import com.erickjuarez.rickandmorty.ui.theme.RickAndMortyTheme
@@ -31,12 +32,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RickAndMortyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                CharacterList(viewModel = characterListViewModel)
             }
         }
     }
