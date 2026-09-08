@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">RickAndMorty</string>
+    <string name="app_name">Rick &amp; Morty</string>
+    <string name="characters_title">Characters</string>
+    <string name="loading_characters">Loading characters…</string>
+    <string name="unable_to_load_characters">Unable to load characters. Please try again.</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="retry">Retry</string>
+    <string name="no_characters_found">No characters found</string>
 </resources>
