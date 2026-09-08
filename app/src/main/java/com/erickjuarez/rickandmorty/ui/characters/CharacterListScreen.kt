@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -21,10 +20,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.erickjuarez.rickandmorty.R
 import com.erickjuarez.rickandmorty.domain.model.Character
+import com.erickjuarez.rickandmorty.ui.theme.RickAndMortyTheme
 
 @Composable
 fun CharacterList(
@@ -166,34 +167,61 @@ fun CharacterListContent(
                 character.id
             }
         ) { character ->
-            BasicCharacterItem(
+            CharacterListItem(
                 character = character
             )
         }
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-private fun BasicCharacterItem(
-    character: Character,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Column(
+private fun CharacterListPreview() {
+    RickAndMortyTheme {
+        CharacterListContent(
+            characters = listOf(
+                Character(
+                    id = 1,
+                    name = "Rick Sanchez",
+                    status = "Alive",
+                    imageUrl = ""
+                ),
+                Character(
+                    id = 2,
+                    name = "Morty Smith",
+                    status = "Alive",
+                    imageUrl = ""
+                ),
+                Character(
+                    id = 3,
+                    name = "Albert Einstein",
+                    status = "Dead",
+                    imageUrl = ""
+                ),
+                Character(
+                    id = 4,
+                    name = "Alien Googah",
+                    status = "unknown",
+                    imageUrl = ""
+                )
+            ),
             modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = character.name,
-                style = MaterialTheme.typography.titleMedium
-            )
+        )
+    }
+}
 
-            Text(
-                text = character.status,
-                modifier = Modifier.padding(top = 4.dp),
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
+@Preview(showBackground = true)
+@Composable
+private fun CharacterListItemPreview() {
+    RickAndMortyTheme {
+        CharacterListItem(
+            character = Character(
+                id = 1,
+                name = "Rick Sanchez With A Very Long Character Name",
+                status = "Alive",
+                imageUrl = ""
+            ),
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
