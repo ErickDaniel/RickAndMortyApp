@@ -9,4 +9,6 @@
     <string name="ask_rick_and_morty">Ask Rick &amp; Morty</string>
     <string name="navigate_back">Navigate back</string>
     <string name="assistant_placeholder">Ask something about Rick &amp; Morty</string>
+    <string name="assistant_status">AI Assistant</string>
+    <string name="rick_avatar_description">Rick assistant avatar</string>
 </resources>
