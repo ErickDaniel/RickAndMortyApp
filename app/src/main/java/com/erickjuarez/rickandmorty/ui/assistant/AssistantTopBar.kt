@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,17 +19,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.erickjuarez.rickandmorty.R
-
-private const val RICK_AVATAR_URL =
-    "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
 
 private val AssistantTopBarBackground = Color(0xFF07141D)
 private val AssistantSubtitleColor = Color(0xFF9EADB7)
@@ -51,24 +43,11 @@ fun AssistantTopBar(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    AsyncImage(
-                        model = RICK_AVATAR_URL,
+                    RickAvatar(
                         contentDescription = stringResource(
                             R.string.rick_avatar_description
                         ),
-                        modifier = Modifier
-                            .size(42.dp)
-                            .clip(CircleShape),
-                        placeholder = ColorPainter(
-                            MaterialTheme.colorScheme.surfaceVariant
-                        ),
-                        error = ColorPainter(
-                            MaterialTheme.colorScheme.primaryContainer
-                        ),
-                        fallback = ColorPainter(
-                            MaterialTheme.colorScheme.primaryContainer
-                        ),
-                        contentScale = ContentScale.Crop
+                        modifier = Modifier.size(42.dp)
                     )
 
                     Spacer(
