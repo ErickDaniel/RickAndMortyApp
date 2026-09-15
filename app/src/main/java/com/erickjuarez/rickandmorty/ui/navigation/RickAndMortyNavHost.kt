@@ -6,7 +6,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.erickjuarez.rickandmorty.ui.assistant.AssistantChatRoute
-import com.erickjuarez.rickandmorty.ui.assistant.AssistantChatScreen
 import com.erickjuarez.rickandmorty.ui.characters.CharacterList
 import com.erickjuarez.rickandmorty.ui.characters.CharacterListViewModel
 
