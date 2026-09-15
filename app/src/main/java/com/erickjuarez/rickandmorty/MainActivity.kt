@@ -1,23 +1,22 @@
 package com.erickjuarez.rickandmorty
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import com.erickjuarez.rickandmorty.ui.characters.CharacterList
 import com.erickjuarez.rickandmorty.ui.characters.CharacterListViewModel
 import com.erickjuarez.rickandmorty.ui.characters.CharacterListViewModelFactory
+import com.erickjuarez.rickandmorty.ui.navigation.RickAndMortyNavHost
 import com.erickjuarez.rickandmorty.ui.theme.RickAndMortyTheme
 
 class MainActivity : ComponentActivity() {
 
     private val characterListViewModel: CharacterListViewModel by viewModels {
-        val application = application as RickAndMortyApplication
-
         CharacterListViewModelFactory(
-            repository = application.appContainer.characterRepository
+            repository = (application as RickAndMortyApplication)
+                .appContainer
+                .characterRepository
         )
     }
 
@@ -26,15 +25,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RickAndMortyTheme {
-                CharacterList(
-                    viewModel = characterListViewModel,
-                    onAskRickAndMortyClick = {
-                        Toast.makeText(
-                            this,
-                            "Ask Rick & Morty",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                RickAndMortyNavHost(
+                    characterListViewModel = characterListViewModel
                 )
             }
         }
