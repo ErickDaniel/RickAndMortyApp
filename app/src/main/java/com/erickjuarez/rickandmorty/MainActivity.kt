@@ -26,7 +26,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             RickAndMortyTheme {
                 RickAndMortyNavHost(
-                    characterListViewModel = characterListViewModel
+                    characterListViewModel = characterListViewModel,
+                    assistantRepository = (application as RickAndMortyApplication)
+                        .appContainer.assistantRepository
                 )
             }
         }

@@ -7,8 +7,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun AssistantChatRoute(
-    onBackClick: () -> Unit,
-    viewModel: AssistantViewModel = viewModel()
+    viewModel: AssistantViewModel,
+    onBackClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

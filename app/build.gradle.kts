@@ -72,4 +72,6 @@ dependencies {
     implementation(libs.google.adk.kotlin.core)
     implementation(libs.google.adk.kotlin.firebase.android)
     implementation(libs.google.firebase.ai)
+    debugImplementation(libs.firebase.appcheck.debug)
+    releaseImplementation(libs.firebase.appcheck.playintegrity)
 }

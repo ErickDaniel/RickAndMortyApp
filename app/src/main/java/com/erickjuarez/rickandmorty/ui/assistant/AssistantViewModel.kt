@@ -2,15 +2,20 @@ package com.erickjuarez.rickandmorty.ui.assistant
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.erickjuarez.rickandmorty.domain.repository.AssistantRepository
 import java.util.concurrent.CancellationException
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 
-class AssistantViewModel : ViewModel() {
+class AssistantViewModel(
+    private val assistantRepository: AssistantRepository
+) : ViewModel() {
+
+    private val conversationId = UUID.randomUUID().toString()
 
     private var nextMessageId = 1L
 
@@ -62,12 +67,14 @@ class AssistantViewModel : ViewModel() {
     private fun requestAssistantResponse(question: String) {
         viewModelScope.launch {
             try {
-                // Respuesta temporal. Aquí conectaremos ADK posteriormente.
-                delay(1_000)
+                val response = assistantRepository.sendMessage(
+                    conversationId = conversationId,
+                    message = question
+                )
 
                 val assistantMessage = AssistantMessage(
                     id = nextMessageId++,
-                    text = buildTemporaryResponse(question),
+                    text = response,
                     author = MessageAuthor.ASSISTANT
                 )
 
