@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,8 +25,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AssistantInputBar(
-    value: String,
-    onValueChange: (String) -> Unit,
+    input: String,
+    isSending: Boolean,
+    onInputChange: (String) -> Unit,
     onSendClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -37,8 +40,8 @@ fun AssistantInputBar(
         verticalAlignment = Alignment.Bottom
     ) {
         OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
+            value = input,
+            onValueChange = onInputChange,
             modifier = Modifier.weight(1f),
             placeholder = {
                 androidx.compose.material3.Text(
@@ -46,19 +49,22 @@ fun AssistantInputBar(
                 )
             },
             trailingIcon = {
-                IconButton(
-                    onClick = onSendClick,
-                    enabled = value.isNotBlank()
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Send,
-                        contentDescription = "Send message",
-                        tint = if (value.isNotBlank()) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        }
+                if (isSending) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(22.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.primary
                     )
+                } else {
+                    IconButton(
+                        onClick = onSendClick,
+                        enabled = input.isNotBlank()
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Send,
+                            contentDescription = "Send message"
+                        )
+                    }
                 }
             },
             shape = RoundedCornerShape(24.dp),
@@ -68,7 +74,7 @@ fun AssistantInputBar(
             ),
             keyboardActions = KeyboardActions(
                 onSend = {
-                    if (value.isNotBlank()) {
+                    if (input.isNotBlank() && !isSending) {
                         onSendClick()
                     }
                 }

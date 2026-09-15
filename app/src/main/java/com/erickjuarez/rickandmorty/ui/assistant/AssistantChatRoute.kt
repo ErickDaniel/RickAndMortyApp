@@ -2,55 +2,24 @@ package com.erickjuarez.rickandmorty.ui.assistant
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun AssistantChatRoute(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: AssistantViewModel = viewModel()
 ) {
-    var input by rememberSaveable {
-        mutableStateOf("")
-    }
-
-    val messages = remember {
-        mutableStateListOf(
-            AssistantMessage(
-                id = 1,
-                text = "Hi! Ask me anything about Rick & Morty.",
-                author = MessageAuthor.ASSISTANT
-            )
-        )
-    }
-
-    fun sendMessage() {
-        val text = input.trim()
-
-        if (text.isEmpty()) {
-            return
-        }
-
-        messages.add(
-            AssistantMessage(
-                id = messages.size.toLong() + 1,
-                text = text,
-                author = MessageAuthor.USER
-            )
-        )
-
-        input = ""
-    }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     AssistantChatScreen(
-        messages = messages,
-        input = input,
-        onInputChange = { newValue ->
-            input = newValue
-        },
-        onSendClick = ::sendMessage,
+        messages = uiState.messages,
+        input = uiState.input,
+        isSending = uiState.isSending,
+        errorMessage = uiState.errorMessage,
+        onInputChange = viewModel::onInputChange,
+        onSendClick = viewModel::sendMessage,
+        onErrorShown = viewModel::onErrorShown,
         onBackClick = onBackClick
     )
 }

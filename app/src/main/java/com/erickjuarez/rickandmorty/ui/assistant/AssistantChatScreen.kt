@@ -8,8 +8,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -17,12 +20,16 @@ import androidx.compose.ui.unit.dp
 fun AssistantChatScreen(
     messages: List<AssistantMessage>,
     input: String,
+    isSending: Boolean,
+    errorMessage: String?,
     onInputChange: (String) -> Unit,
     onSendClick: () -> Unit,
+    onErrorShown: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) {
@@ -32,11 +39,29 @@ fun AssistantChatScreen(
         }
     }
 
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            onErrorShown()
+        }
+    }
+
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         topBar = {
             AssistantTopBar(
                 onBackClick = onBackClick
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+        bottomBar = {
+            AssistantInputBar(
+                input = input,
+                isSending = isSending,
+                onInputChange = onInputChange,
+                onSendClick = onSendClick
             )
         }
     ) { innerPadding ->
@@ -66,12 +91,6 @@ fun AssistantChatScreen(
                     )
                 }
             }
-
-            AssistantInputBar(
-                value = input,
-                onValueChange = onInputChange,
-                onSendClick = onSendClick
-            )
         }
     }
 }
