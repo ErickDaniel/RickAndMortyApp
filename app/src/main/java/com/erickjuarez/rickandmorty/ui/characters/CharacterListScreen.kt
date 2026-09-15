@@ -30,12 +30,14 @@ import com.erickjuarez.rickandmorty.ui.theme.RickAndMortyTheme
 @Composable
 fun CharacterList(
     viewModel: CharacterListViewModel,
+    onAskRickAndMortyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     CharacterListScreen(
         uiState = uiState,
         onRetry = viewModel::retry,
+        onAskRickAndMortyClick = onAskRickAndMortyClick,
         modifier = modifier
     )
 }
@@ -45,6 +47,7 @@ fun CharacterList(
 fun CharacterListScreen(
     uiState: CharacterListUiState,
     onRetry: () -> Unit,
+    onAskRickAndMortyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -56,6 +59,11 @@ fun CharacterListScreen(
                         text = stringResource(R.string.characters_title)
                     )
                 }
+            )
+        },
+        floatingActionButton = {
+            AskRickFloatingButton(
+                onClick = onAskRickAndMortyClick
             )
         }
     ) { innerPadding ->

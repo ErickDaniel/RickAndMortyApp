@@ -1,6 +1,7 @@
 package com.erickjuarez.rickandmorty
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -25,7 +26,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RickAndMortyTheme {
-                CharacterList(viewModel = characterListViewModel)
+                CharacterList(
+                    viewModel = characterListViewModel,
+                    onAskRickAndMortyClick = {
+                        Toast.makeText(
+                            this,
+                            "Ask Rick & Morty",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                )
             }
         }
     }

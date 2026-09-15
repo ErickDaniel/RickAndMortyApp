@@ -6,4 +6,5 @@
     <string name="retry">Retry</string>
     <string name="no_characters_found">No characters found</string>
     <string name="character_image_description">Image of %1$s</string>
+    <string name="ask_rick_and_morty">Ask Rick &amp; Morty</string>
 </resources>
