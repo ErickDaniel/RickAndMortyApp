@@ -28,11 +28,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.erickjuarez.rickandmorty.R
+import com.erickjuarez.rickandmorty.domain.model.AssistantPersona
 import com.erickjuarez.rickandmorty.domain.model.Character
 
 @Composable
 fun AssistantMessageItem(
     message: AssistantMessage,
+    persona: AssistantPersona,
     onCharacterClick: (Character) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -48,6 +50,7 @@ fun AssistantMessageItem(
             RickMessage(
                 text = message.text,
                 referencedCharacters = message.referencedCharacters,
+                persona = persona,
                 onCharacterClick = onCharacterClick,
                 modifier = modifier
             )
@@ -93,6 +96,7 @@ private fun UserMessage(
 private fun RickMessage(
     text: String,
     referencedCharacters: List<Character>,
+    persona: AssistantPersona,
     onCharacterClick: (Character) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -100,7 +104,8 @@ private fun RickMessage(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top
     ) {
-        RickAvatar(
+        AssistantAvatar(
+            persona = persona,
             contentDescription = null,
             modifier = Modifier.size(34.dp)
         )

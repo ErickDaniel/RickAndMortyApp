@@ -1,8 +1,9 @@
 package com.erickjuarez.rickandmorty.data.repository
 
-import com.erickjuarez.rickandmorty.data.assistant.RickAssistantAgent
+import com.erickjuarez.rickandmorty.data.assistant.CharacterAssistantAgent
 import com.erickjuarez.rickandmorty.data.assistant.RickAndMortyTool
 import com.erickjuarez.rickandmorty.domain.model.AssistantReply
+import com.erickjuarez.rickandmorty.domain.model.AssistantPersona
 import com.erickjuarez.rickandmorty.domain.model.Character
 import com.erickjuarez.rickandmorty.domain.repository.AssistantRepository
 import com.erickjuarez.rickandmorty.domain.repository.ICharacterRepository
@@ -18,15 +19,17 @@ import com.google.firebase.FirebaseApp
 
 class DefaultAssistantRepository(
     firebaseApp: FirebaseApp,
-    characterRepository: ICharacterRepository
+    characterRepository: ICharacterRepository,
+    private val persona: AssistantPersona
 ) : AssistantRepository {
 
     private val sessionService = InMemorySessionService()
 
     private val runner = InMemoryRunner(
-        agent = RickAssistantAgent.create(
+        agent = CharacterAssistantAgent.create(
             firebaseApp = firebaseApp,
-            characterRepository = characterRepository
+            characterRepository = characterRepository,
+            persona = persona
         ),
         appName = APP_NAME,
         sessionService = sessionService
@@ -56,7 +59,7 @@ class DefaultAssistantRepository(
                 throw IllegalStateException(error)
             }
 
-            if (event.author == RickAssistantAgent.NAME) {
+            if (event.author == persona.agentName) {
                 response.append(event.visibleText())
             }
 

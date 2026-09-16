@@ -13,6 +13,7 @@ fun AssistantChatRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     AssistantChatScreen(
+        persona = uiState.persona,
         messages = uiState.messages,
         input = uiState.input,
         isSending = uiState.isSending,

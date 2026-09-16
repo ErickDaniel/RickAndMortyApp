@@ -24,6 +24,10 @@ Development Kit (ADK).
 ### AI assistant
 
 - Dedicated chat experience for questions about the Rick and Morty universe.
+- A selectable assistant—Rick, Morty, Summer, Beth or Jerry—with matching
+  avatar, welcome message and AI personality.
+- A personalized floating action button that displays the active assistant and
+  addresses the selected character by name, with previous and next controls.
 - Gemini integration through Firebase AI Logic and Google ADK for Kotlin.
 - ADK function tool that retrieves canonical character data from the Rick and
   Morty API before Gemini writes a factual answer.
@@ -164,12 +168,14 @@ so network inspection code is disabled outside debug builds.
 
 ## Testing
 
-The project currently includes 18 JVM unit tests covering:
+The project currently includes 22 JVM unit tests covering:
 
 - `AssistantViewModel` initial state, input updates, successful responses,
   referenced characters, concurrent-send prevention and localized errors.
 - `RickAndMortyTool` declaration, argument normalization, successful API data,
   empty 404 results and unexpected failures.
+- Assistant persona definitions, canonical avatars, circular selection and the
+  distinct ADK personality prompts with shared grounding rules.
 - Conversion of ADK tool responses into character references.
 - Markdown parsing for emphasis, inline code, lists, links and unsafe or
   incomplete markup.

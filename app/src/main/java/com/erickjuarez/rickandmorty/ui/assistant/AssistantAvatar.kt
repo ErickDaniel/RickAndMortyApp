@@ -1,26 +1,33 @@
 package com.erickjuarez.rickandmorty.ui.assistant
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-
-const val RICK_AVATAR_URL =
-    "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
+import com.erickjuarez.rickandmorty.domain.model.AssistantPersona
 
 @Composable
-fun RickAvatar(
+fun AssistantAvatar(
+    persona: AssistantPersona,
     contentDescription: String?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    borderWidth: Dp = 0.dp,
+    borderColor: Color = Color.Transparent
 ) {
     AsyncImage(
-        model = RICK_AVATAR_URL,
+        model = persona.avatarUrl,
         contentDescription = contentDescription,
-        modifier = modifier.clip(CircleShape),
+        modifier = modifier
+            .clip(CircleShape)
+            .border(borderWidth, borderColor, CircleShape),
         placeholder = ColorPainter(
             MaterialTheme.colorScheme.surfaceVariant
         ),

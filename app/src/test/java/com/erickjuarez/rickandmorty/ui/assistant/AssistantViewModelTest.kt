@@ -2,6 +2,7 @@ package com.erickjuarez.rickandmorty.ui.assistant
 
 import com.erickjuarez.rickandmorty.MainDispatcherRule
 import com.erickjuarez.rickandmorty.domain.model.AssistantReply
+import com.erickjuarez.rickandmorty.domain.model.AssistantPersona
 import com.erickjuarez.rickandmorty.domain.model.Character
 import com.erickjuarez.rickandmorty.domain.repository.AssistantRepository
 import kotlinx.coroutines.CompletableDeferred
@@ -23,6 +24,7 @@ class AssistantViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val textProvider = FakeAssistantTextProvider()
+    private val persona = AssistantPersona.SUMMER
 
     @Test
     fun initialState_usesLocalizedWelcomeMessage() {
@@ -30,8 +32,12 @@ class AssistantViewModelTest {
 
         val state = viewModel.uiState.value
 
+        assertEquals(persona, state.persona)
         assertEquals(1, state.messages.size)
-        assertEquals(textProvider.welcomeMessage, state.messages.single().text)
+        assertEquals(
+            "Localized welcome from Summer Smith",
+            state.messages.single().text
+        )
         assertEquals(MessageAuthor.ASSISTANT, state.messages.single().author)
         assertEquals("", state.input)
         assertFalse(state.isSending)
@@ -135,7 +141,7 @@ class AssistantViewModelTest {
 
             val state = viewModel.uiState.value
             assertFalse(state.isSending)
-            assertEquals(textProvider.genericErrorMessage, state.errorMessage)
+            assertEquals("Localized error for Summer Smith", state.errorMessage)
             assertFalse(state.errorMessage.orEmpty().contains("Technical"))
             assertEquals(2, state.messages.size)
 
@@ -148,7 +154,8 @@ class AssistantViewModelTest {
         repository: FakeAssistantRepository = FakeAssistantRepository()
     ): AssistantViewModel = AssistantViewModel(
         assistantRepository = repository,
-        textProvider = textProvider
+        textProvider = textProvider,
+        persona = persona
     )
 
     private fun character(id: Int, name: String) = Character(
@@ -161,8 +168,11 @@ class AssistantViewModelTest {
 }
 
 private class FakeAssistantTextProvider : AssistantTextProvider {
-    override val welcomeMessage = "Localized welcome"
-    override val genericErrorMessage = "Localized error"
+    override fun welcomeMessage(personaName: String) =
+        "Localized welcome from $personaName"
+
+    override fun genericErrorMessage(personaName: String) =
+        "Localized error for $personaName"
 }
 
 private class FakeAssistantRepository(
