@@ -4,6 +4,7 @@ import android.content.Context
 import com.erickjuarez.rickandmorty.data.remote.NetworkModule
 import com.erickjuarez.rickandmorty.data.repository.CharacterRepository
 import com.erickjuarez.rickandmorty.data.repository.DefaultAssistantRepository
+import com.erickjuarez.rickandmorty.domain.model.AssistantPersona
 import com.erickjuarez.rickandmorty.domain.repository.AssistantRepository
 import com.erickjuarez.rickandmorty.domain.repository.ICharacterRepository
 import com.google.firebase.FirebaseApp
@@ -18,11 +19,15 @@ class DefaultAppContainer(
         )
     }
 
-    override val assistantRepository: AssistantRepository by lazy {
-        DefaultAssistantRepository(
-            firebaseApp = FirebaseApp.getInstance(),
-            characterRepository = characterRepository
-        )
-    }
+    private val assistantRepositories = mutableMapOf<AssistantPersona, AssistantRepository>()
+
+    override fun assistantRepository(persona: AssistantPersona): AssistantRepository =
+        assistantRepositories.getOrPut(persona) {
+            DefaultAssistantRepository(
+                firebaseApp = FirebaseApp.getInstance(),
+                characterRepository = characterRepository,
+                persona = persona
+            )
+        }
 
 }

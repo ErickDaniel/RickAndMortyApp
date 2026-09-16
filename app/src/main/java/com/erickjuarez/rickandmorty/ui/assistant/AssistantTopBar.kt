@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.erickjuarez.rickandmorty.R
+import com.erickjuarez.rickandmorty.domain.model.AssistantPersona
 
 private val AssistantTopBarBackground = Color(0xFF07141D)
 private val AssistantSubtitleColor = Color(0xFF9EADB7)
@@ -31,6 +32,7 @@ private val AssistantDividerColor = Color(0xFF1D303B)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AssistantTopBar(
+    persona: AssistantPersona,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -43,9 +45,11 @@ fun AssistantTopBar(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    RickAvatar(
+                    AssistantAvatar(
+                        persona = persona,
                         contentDescription = stringResource(
-                            R.string.rick_avatar_description
+                            R.string.assistant_avatar_description,
+                            persona.displayName
                         ),
                         modifier = Modifier.size(42.dp)
                     )
@@ -56,9 +60,7 @@ fun AssistantTopBar(
 
                     Column {
                         Text(
-                            text = stringResource(
-                                R.string.ask_rick_and_morty
-                            ),
+                            text = persona.displayName,
                             style = MaterialTheme.typography.titleMedium,
                             color = Color.White
                         )

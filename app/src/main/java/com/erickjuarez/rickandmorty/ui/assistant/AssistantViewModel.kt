@@ -2,6 +2,7 @@ package com.erickjuarez.rickandmorty.ui.assistant
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.erickjuarez.rickandmorty.domain.model.AssistantPersona
 import com.erickjuarez.rickandmorty.domain.repository.AssistantRepository
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,8 @@ import java.util.UUID
 
 class AssistantViewModel(
     private val assistantRepository: AssistantRepository,
-    private val textProvider: AssistantTextProvider
+    private val textProvider: AssistantTextProvider,
+    private val persona: AssistantPersona
 ) : ViewModel() {
 
     private val conversationId = UUID.randomUUID().toString()
@@ -22,10 +24,11 @@ class AssistantViewModel(
 
     private val _uiState = MutableStateFlow(
         AssistantUiState(
+            persona = persona,
             messages = listOf(
                 AssistantMessage(
                     id = 0L,
-                    text = textProvider.welcomeMessage,
+                    text = textProvider.welcomeMessage(persona.displayName),
                     author = MessageAuthor.ASSISTANT
                 )
             )
@@ -92,7 +95,7 @@ class AssistantViewModel(
                 _uiState.update { currentState ->
                     currentState.copy(
                         isSending = false,
-                        errorMessage = textProvider.genericErrorMessage
+                        errorMessage = textProvider.genericErrorMessage(persona.displayName)
                     )
                 }
             }
