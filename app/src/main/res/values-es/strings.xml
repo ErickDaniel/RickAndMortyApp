@@ -34,6 +34,12 @@
     <string name="ask_rick_and_morty">Pregunta a %1$s</string>
     <string name="previous_assistant">Asistente anterior</string>
     <string name="next_assistant">Siguiente asistente</string>
+    <string name="chat_history_title">Historial de chats</string>
+    <string name="chat_history_empty_title">No hay conversaciones anteriores</string>
+    <string name="chat_history_empty_description">Tus chats anteriores aparecerán aquí.</string>
+    <string name="chat_history_saved_conversation">Conversación guardada</string>
+    <string name="chat_history_message_count">%1$d mensajes</string>
+    <string name="chat_history_conversation_with">Conversación con %1$s</string>
     <string name="navigate_back">Navegar hacia atras</string>
     <string name="assistant_placeholder">Pregunta algo acerca de Rick &amp; Morty</string>
     <string name="assistant_status">Asistente de IA</string>

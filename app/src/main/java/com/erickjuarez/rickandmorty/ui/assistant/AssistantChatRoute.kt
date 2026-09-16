@@ -12,6 +12,16 @@ fun AssistantChatRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    if (uiState.isHistoryVisible) {
+        ChatHistoryScreen(
+            conversations = uiState.previousConversations,
+            selectedConversationId = uiState.selectedHistoryConversationId,
+            onConversationClick = viewModel::onHistoryConversationClick,
+            onBackClick = viewModel::onHistoryBack
+        )
+        return
+    }
+
     AssistantChatScreen(
         persona = uiState.persona,
         messages = uiState.messages,
@@ -21,6 +31,7 @@ fun AssistantChatRoute(
         onInputChange = viewModel::onInputChange,
         onSendClick = viewModel::sendMessage,
         onErrorShown = viewModel::onErrorShown,
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        onHistoryClick = viewModel::showHistory
     )
 }

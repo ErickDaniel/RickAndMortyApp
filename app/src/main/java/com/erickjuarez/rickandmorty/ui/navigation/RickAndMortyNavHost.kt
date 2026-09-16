@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.erickjuarez.rickandmorty.domain.repository.AssistantRepository
+import com.erickjuarez.rickandmorty.domain.repository.ChatHistoryRepository
 import com.erickjuarez.rickandmorty.domain.model.AssistantPersona
 import com.erickjuarez.rickandmorty.ui.assistant.AssistantChatRoute
 import com.erickjuarez.rickandmorty.ui.assistant.AssistantViewModel
@@ -21,6 +22,7 @@ import com.erickjuarez.rickandmorty.ui.characters.CharacterListViewModel
 fun RickAndMortyNavHost(
     characterListViewModel: CharacterListViewModel,
     assistantRepositoryProvider: (AssistantPersona) -> AssistantRepository,
+    chatHistoryRepository: ChatHistoryRepository,
     assistantPersona: AssistantPersona,
     onPreviousAssistant: () -> Unit,
     onNextAssistant: () -> Unit,
@@ -59,7 +61,8 @@ fun RickAndMortyNavHost(
                     textProvider = ResourceAssistantTextProvider(
                         context.applicationContext
                     ),
-                    persona = assistantPersona
+                    persona = assistantPersona,
+                    chatHistoryRepository = chatHistoryRepository
                 )
             )
 

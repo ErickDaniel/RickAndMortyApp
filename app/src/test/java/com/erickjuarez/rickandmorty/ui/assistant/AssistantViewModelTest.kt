@@ -4,12 +4,18 @@ import com.erickjuarez.rickandmorty.MainDispatcherRule
 import com.erickjuarez.rickandmorty.domain.model.AssistantReply
 import com.erickjuarez.rickandmorty.domain.model.AssistantPersona
 import com.erickjuarez.rickandmorty.domain.model.Character
+import com.erickjuarez.rickandmorty.domain.model.ChatConversation
+import com.erickjuarez.rickandmorty.domain.model.ChatHistoryAuthor
 import com.erickjuarez.rickandmorty.domain.repository.AssistantRepository
+import com.erickjuarez.rickandmorty.domain.repository.ChatHistoryRepository
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -150,12 +156,84 @@ class AssistantViewModelTest {
             assertNull(viewModel.uiState.value.errorMessage)
         }
 
+    @Test
+    fun sendMessage_persistsConversationWithPersonaAndCharacterReferences() =
+        runTest(mainDispatcherRule.testDispatcher) {
+            val referencedCharacter = character(id = 2, name = "Morty Smith")
+            val historyRepository = FakeChatHistoryRepository()
+            val viewModel = createViewModel(
+                repository = FakeAssistantRepository(
+                    reply = AssistantReply(
+                        text = "Morty is alive.",
+                        referencedCharacters = listOf(referencedCharacter)
+                    )
+                ),
+                historyRepository = historyRepository
+            )
+            viewModel.onInputChange("Who is Morty?")
+
+            viewModel.sendMessage()
+            advanceUntilIdle()
+
+            val savedConversation = historyRepository.savedConversations.last()
+            assertEquals(persona, savedConversation.persona)
+            assertEquals(3, savedConversation.messages.size)
+            assertEquals(
+                ChatHistoryAuthor.USER,
+                savedConversation.messages[1].author
+            )
+            assertEquals(
+                listOf(referencedCharacter),
+                savedConversation.messages.last().referencedCharacters
+            )
+        }
+
+    @Test
+    fun history_exposesPreviousConversationsAndSupportsBackNavigation() =
+        runTest(mainDispatcherRule.testDispatcher) {
+            val previousConversation = ChatConversation(
+                id = "previous",
+                persona = AssistantPersona.MORTY,
+                messages = emptyList(),
+                createdAtMillis = 1L,
+                updatedAtMillis = 2L
+            )
+            val historyRepository = FakeChatHistoryRepository(
+                initialConversations = listOf(previousConversation)
+            )
+            val viewModel = createViewModel(historyRepository = historyRepository)
+            advanceUntilIdle()
+
+            assertEquals(
+                listOf(previousConversation),
+                viewModel.uiState.value.previousConversations
+            )
+
+            viewModel.showHistory()
+            viewModel.onHistoryConversationClick(previousConversation.id)
+            assertTrue(viewModel.uiState.value.isHistoryVisible)
+            assertEquals(
+                previousConversation.id,
+                viewModel.uiState.value.selectedHistoryConversationId
+            )
+
+            viewModel.onHistoryBack()
+            assertTrue(viewModel.uiState.value.isHistoryVisible)
+            assertNull(viewModel.uiState.value.selectedHistoryConversationId)
+
+            viewModel.onHistoryBack()
+            assertFalse(viewModel.uiState.value.isHistoryVisible)
+        }
+
     private fun createViewModel(
-        repository: FakeAssistantRepository = FakeAssistantRepository()
+        repository: FakeAssistantRepository = FakeAssistantRepository(),
+        historyRepository: FakeChatHistoryRepository = FakeChatHistoryRepository()
     ): AssistantViewModel = AssistantViewModel(
         assistantRepository = repository,
         textProvider = textProvider,
-        persona = persona
+        persona = persona,
+        chatHistoryRepository = historyRepository,
+        timeProvider = { 1_000L }
     )
 
     private fun character(id: Int, name: String) = Character(
@@ -197,5 +275,25 @@ private class FakeAssistantRepository(
         lastMessage = message
         error?.let { throw it }
         return pendingReply?.await() ?: reply
+    }
+}
+
+private class FakeChatHistoryRepository(
+    initialConversations: List<ChatConversation> = emptyList()
+) : ChatHistoryRepository {
+    private val conversations = MutableStateFlow(initialConversations)
+
+    val savedConversations = mutableListOf<ChatConversation>()
+
+    override fun observePreviousConversations(
+        currentConversationId: String
+    ): Flow<List<ChatConversation>> = conversations.map { items ->
+        items.filterNot { it.id == currentConversationId }
+    }
+
+    override suspend fun saveConversation(conversation: ChatConversation) {
+        savedConversations += conversation
+        conversations.value = conversations.value
+            .filterNot { it.id == conversation.id } + conversation
     }
 }
