@@ -9,7 +9,7 @@ import com.google.firebase.FirebaseApp
 class RickAndMortyApplication: Application() {
 
     val appContainer: AppContainer by lazy {
-        DefaultAppContainer()
+        DefaultAppContainer(applicationContext)
     }
 
     override fun onCreate() {
