@@ -1,9 +1,36 @@
 <resources>
     <string name="app_name">Rick &amp; Morty</string>
     <string name="characters_title">Characters</string>
+    <string name="home_title">RickAndMortyApp</string>
+    <string name="home_subtitle">Explore the multiverse</string>
+    <string name="search_characters">Search characters…</string>
+    <string name="filter_characters">Filter characters</string>
+    <string name="filters_title">Character filters</string>
+    <string name="filter_state_label">State</string>
+    <string name="filter_origin_label">Origin</string>
+    <string name="filter_all">All statuses</string>
+    <string name="filter_all_origins">All origins</string>
+    <string name="filter_alive">Alive</string>
+    <string name="filter_dead">Dead</string>
+    <string name="filter_unknown">Unknown</string>
+    <string name="apply_filters">Apply</string>
+    <string name="reset_filters">Reset</string>
+    <string name="cancel">Cancel</string>
     <string name="loading_characters">Loading characters…</string>
+    <string name="loading_more_characters">Loading more characters…</string>
+    <string name="retry_load_more">Couldn’t load more. Tap to retry</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="retry">Retry</string>
     <string name="no_characters_found">No characters found</string>
     <string name="character_image_description">Image of %1$s</string>
+    <string name="character_origin">Origin: %1$s</string>
+    <string name="ask_rick_and_morty">Ask Rick &amp; Morty</string>
+    <string name="navigate_back">Navigate back</string>
+    <string name="assistant_placeholder">Ask something about Rick &amp; Morty</string>
+    <string name="assistant_status">AI Assistant</string>
+    <string name="assistant_welcome_message">Hi! Ask me anything about Rick &amp; Morty.</string>
+    <string name="assistant_generic_error">Rick couldn’t answer right now.</string>
+    <string name="assistant_send_message">Send message</string>
+    <string name="assistant_referenced_characters">Referenced characters</string>
+    <string name="rick_avatar_description">Rick assistant avatar</string>
 </resources>

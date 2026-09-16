@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Rick &amp; Morty</string>
+    <string name="characters_title">Personajes</string>
+    <string name="home_title">Rick And Morty App</string>
+    <string name="home_subtitle">Explora el multiverso</string>
+    <string name="search_characters">Buscar personajes…</string>
+    <string name="filter_characters">Filtrar personajes</string>
+    <string name="filters_title">Filtro de personajes</string>
+    <string name="filter_state_label">Estado</string>
+    <string name="filter_origin_label">Origen</string>
+    <string name="filter_all">Todos los estados</string>
+    <string name="filter_all_origins">Todos los origenes</string>
+    <string name="filter_alive">Vivo</string>
+    <string name="filter_dead">Muerto</string>
+    <string name="filter_unknown">Desconocido</string>
+    <string name="apply_filters">Aplicar</string>
+    <string name="reset_filters">Resetear</string>
+    <string name="cancel">Cancelar</string>
+    <string name="loading_characters">Cargango personajes…</string>
+    <string name="loading_more_characters">Cargando mas personajes…</string>
+    <string name="retry_load_more">No se pude cargar mas. Presiona para reintentar</string>
+    <string name="something_went_wrong">Algo salió mal</string>
+    <string name="retry">Reintentar</string>
+    <string name="no_characters_found">No se encontraron personajes</string>
+    <string name="character_image_description">Imagen de %1$s</string>
+    <string name="character_origin">Origen: %1$s</string>
+    <string name="ask_rick_and_morty">Pregunta a Rick &amp; Morty</string>
+    <string name="navigate_back">Navegar hacia atras</string>
+    <string name="assistant_placeholder">Pregunta algo acerca de Rick &amp; Morty</string>
+    <string name="assistant_status">Asistente de IA</string>
+    <string name="assistant_welcome_message">¡Hola! Pregúntame lo que quieras sobre Rick &amp; Morty.</string>
+    <string name="assistant_generic_error">Rick no puede responder en este momento.</string>
+    <string name="assistant_send_message">Enviar mensaje</string>
+    <string name="assistant_referenced_characters">Personajes de referencia</string>
+    <string name="rick_avatar_description">Asistente Rick</string>
+</resources>
