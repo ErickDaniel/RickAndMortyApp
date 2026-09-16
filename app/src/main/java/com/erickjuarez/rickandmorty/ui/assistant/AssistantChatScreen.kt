@@ -19,10 +19,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.erickjuarez.rickandmorty.domain.model.Character
+import com.erickjuarez.rickandmorty.domain.model.AssistantPersona
 import com.erickjuarez.rickandmorty.ui.components.CharacterIdentityDialog
 
 @Composable
 fun AssistantChatScreen(
+    persona: AssistantPersona,
     messages: List<AssistantMessage>,
     input: String,
     isSending: Boolean,
@@ -31,6 +33,7 @@ fun AssistantChatScreen(
     onSendClick: () -> Unit,
     onErrorShown: () -> Unit,
     onBackClick: () -> Unit,
+    onHistoryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
@@ -56,7 +59,9 @@ fun AssistantChatScreen(
         modifier = modifier,
         topBar = {
             AssistantTopBar(
-                onBackClick = onBackClick
+                persona = persona,
+                onBackClick = onBackClick,
+                onHistoryClick = onHistoryClick
             )
         },
         snackbarHost = {
@@ -91,6 +96,7 @@ fun AssistantChatScreen(
                 ) { message ->
                     AssistantMessageItem(
                         message = message,
+                        persona = persona,
                         onCharacterClick = { character ->
                             selectedCharacter = character
                         },

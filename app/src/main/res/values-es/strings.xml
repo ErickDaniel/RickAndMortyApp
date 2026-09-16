@@ -31,13 +31,21 @@
     <string name="character_identity_verified">Identidad verificada</string>
     <string name="character_identity_database">Base de datos central de la Ciudadela</string>
     <string name="character_identity_close">Cerrar identificación del personaje</string>
-    <string name="ask_rick_and_morty">Pregunta a Rick &amp; Morty</string>
+    <string name="ask_rick_and_morty">Pregunta a %1$s</string>
+    <string name="previous_assistant">Asistente anterior</string>
+    <string name="next_assistant">Siguiente asistente</string>
+    <string name="chat_history_title">Historial de chats</string>
+    <string name="chat_history_empty_title">No hay conversaciones anteriores</string>
+    <string name="chat_history_empty_description">Tus chats anteriores aparecerán aquí.</string>
+    <string name="chat_history_saved_conversation">Conversación guardada</string>
+    <string name="chat_history_message_count">%1$d mensajes</string>
+    <string name="chat_history_conversation_with">Conversación con %1$s</string>
     <string name="navigate_back">Navegar hacia atras</string>
     <string name="assistant_placeholder">Pregunta algo acerca de Rick &amp; Morty</string>
     <string name="assistant_status">Asistente de IA</string>
-    <string name="assistant_welcome_message">¡Hola! Pregúntame lo que quieras sobre Rick &amp; Morty.</string>
-    <string name="assistant_generic_error">Rick no puede responder en este momento.</string>
+    <string name="assistant_welcome_message">¡Hola! Soy %1$s. Pregúntame lo que quieras sobre Rick &amp; Morty.</string>
+    <string name="assistant_generic_error">%1$s no puede responder en este momento.</string>
     <string name="assistant_send_message">Enviar mensaje</string>
     <string name="assistant_referenced_characters">Personajes de referencia</string>
-    <string name="rick_avatar_description">Asistente Rick</string>
+    <string name="assistant_avatar_description">Avatar del asistente %1$s</string>
 </resources>

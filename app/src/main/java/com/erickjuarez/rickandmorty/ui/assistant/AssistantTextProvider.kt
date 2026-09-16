@@ -4,17 +4,17 @@ import android.content.Context
 import com.erickjuarez.rickandmorty.R
 
 interface AssistantTextProvider {
-    val welcomeMessage: String
-    val genericErrorMessage: String
+    fun welcomeMessage(personaName: String): String
+    fun genericErrorMessage(personaName: String): String
 }
 
 class ResourceAssistantTextProvider(
     private val context: Context
 ) : AssistantTextProvider {
 
-    override val welcomeMessage: String
-        get() = context.getString(R.string.assistant_welcome_message)
+    override fun welcomeMessage(personaName: String): String =
+        context.getString(R.string.assistant_welcome_message, personaName)
 
-    override val genericErrorMessage: String
-        get() = context.getString(R.string.assistant_generic_error)
+    override fun genericErrorMessage(personaName: String): String =
+        context.getString(R.string.assistant_generic_error, personaName)
 }

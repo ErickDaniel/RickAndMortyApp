@@ -46,12 +46,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.erickjuarez.rickandmorty.R
 import com.erickjuarez.rickandmorty.domain.model.Character
+import com.erickjuarez.rickandmorty.domain.model.AssistantPersona
 import com.erickjuarez.rickandmorty.ui.components.CharacterIdentityDialog
 import com.erickjuarez.rickandmorty.ui.theme.RickAndMortyTheme
 
 @Composable
 fun CharacterList(
     viewModel: CharacterListViewModel,
+    assistantPersona: AssistantPersona,
+    onPreviousAssistant: () -> Unit,
+    onNextAssistant: () -> Unit,
     onAskRickAndMortyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -62,6 +66,9 @@ fun CharacterList(
         onSearchQueryChange = viewModel::onSearchQueryChange,
         onFiltersApply = viewModel::onFiltersApply,
         onLoadNextPage = viewModel::loadNextPage,
+        assistantPersona = assistantPersona,
+        onPreviousAssistant = onPreviousAssistant,
+        onNextAssistant = onNextAssistant,
         onAskRickAndMortyClick = onAskRickAndMortyClick,
         modifier = modifier
     )
@@ -75,6 +82,9 @@ fun CharacterListScreen(
     onSearchQueryChange: (String) -> Unit,
     onFiltersApply: (CharacterStatusFilter, String?) -> Unit,
     onLoadNextPage: () -> Unit,
+    assistantPersona: AssistantPersona,
+    onPreviousAssistant: () -> Unit,
+    onNextAssistant: () -> Unit,
     onAskRickAndMortyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -116,6 +126,9 @@ fun CharacterListScreen(
         },
         floatingActionButton = {
             AskRickFloatingButton(
+                persona = assistantPersona,
+                onPreviousPersona = onPreviousAssistant,
+                onNextPersona = onNextAssistant,
                 onClick = onAskRickAndMortyClick
             )
         }
