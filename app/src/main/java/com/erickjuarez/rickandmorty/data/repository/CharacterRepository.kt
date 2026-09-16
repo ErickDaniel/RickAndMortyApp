@@ -9,8 +9,19 @@ class CharacterRepository(
     private val api: RickAndMortyApi
 ): ICharacterRepository {
 
-    override suspend fun getCharacters(page: Int): CharacterPage {
-        val response = api.getCharacters(page)
+    override suspend fun getCharacters(page: Int): CharacterPage =
+        searchCharacters(page = page)
+
+    override suspend fun searchCharacters(
+        page: Int,
+        name: String?,
+        status: String?
+    ): CharacterPage {
+        val response = api.getCharacters(
+            page = page,
+            name = name,
+            status = status
+        )
 
         return CharacterPage(
             characters = response.results.map { it.toDomain() },

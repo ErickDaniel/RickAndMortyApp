@@ -58,7 +58,7 @@ class CharacterListViewModel(
     }
 
     fun loadNextPage() {
-        if (loadCharactersJob?.isActive == true || !canLoadNextPage) {
+        if (loadCharactersJob?.isActive == true || !canLoadNextPage || currentPage > 9) {
             return
         }
 

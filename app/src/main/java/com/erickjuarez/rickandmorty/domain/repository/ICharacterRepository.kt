@@ -6,4 +6,10 @@ interface ICharacterRepository {
 
     suspend fun getCharacters(page: Int): CharacterPage
 
+    suspend fun searchCharacters(
+        page: Int = 1,
+        name: String? = null,
+        status: String? = null
+    ): CharacterPage
+
 }

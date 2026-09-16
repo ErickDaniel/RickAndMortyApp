@@ -103,9 +103,4 @@ class AssistantViewModel(
             currentState.copy(errorMessage = null)
         }
     }
-
-    private fun buildTemporaryResponse(question: String): String {
-        return "You asked: \"$question\". " +
-                "Give me a moment, Morty... the AI agent isn't connected yet!"
-    }
 }

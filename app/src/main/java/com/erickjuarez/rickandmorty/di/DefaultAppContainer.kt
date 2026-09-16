@@ -20,7 +20,8 @@ class DefaultAppContainer(
 
     override val assistantRepository: AssistantRepository by lazy {
         DefaultAssistantRepository(
-            firebaseApp = FirebaseApp.getInstance()
+            firebaseApp = FirebaseApp.getInstance(),
+            characterRepository = characterRepository
         )
     }
 
