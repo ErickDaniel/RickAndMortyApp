@@ -32,6 +32,9 @@ Development Kit (ADK).
 - ADK function tool that retrieves canonical character data from the Rick and
   Morty API before Gemini writes a factual answer.
 - Referenced-character cards attached to assistant messages.
+- Persistent chat history backed by Room, with the Assistant persona, messages
+  and referenced-character carousels restored in read-only conversations.
+- History access from the chat top bar, excluding the current conversation.
 - Markdown rendering for bold and italic text, inline code, lists and links.
 - Conversation state managed by an independent `AssistantViewModel`.
 - Localized assistant copy in English and Spanish.
@@ -112,6 +115,7 @@ The assistant then writes the final response in the user's language.
 | AI | Firebase AI Logic, Gemini, Google ADK for Kotlin |
 | App attestation | Firebase App Check |
 | Debug networking | Chucker |
+| Local persistence | Room |
 | Testing | JUnit 4, kotlinx-coroutines-test |
 
 ## Requirements
@@ -168,7 +172,7 @@ so network inspection code is disabled outside debug builds.
 
 ## Testing
 
-The project currently includes 22 JVM unit tests covering:
+The project currently includes 27 JVM unit tests covering:
 
 - `AssistantViewModel` initial state, input updates, successful responses,
   referenced characters, concurrent-send prevention and localized errors.
@@ -176,6 +180,8 @@ The project currently includes 22 JVM unit tests covering:
   empty 404 results and unexpected failures.
 - Assistant persona definitions, canonical avatars, circular selection and the
   distinct ADK personality prompts with shared grounding rules.
+- Chat-history persistence, Room type conversion, conversation metadata,
+  previous-conversation state and restored character references.
 - Conversion of ADK tool responses into character references.
 - Markdown parsing for emphasis, inline code, lists, links and unsafe or
   incomplete markup.
@@ -232,7 +238,7 @@ during development and Play Integrity in release.
 ## Future improvements
 
 - Pull to refresh for the character list.
-- Offline caching with Room.
+- Offline character caching using the existing Room foundation.
 - Dependency injection with Hilt or Koin as the project grows.
 - Compose UI and navigation tests.
 - Additional unit coverage for character-list filtering and pagination.

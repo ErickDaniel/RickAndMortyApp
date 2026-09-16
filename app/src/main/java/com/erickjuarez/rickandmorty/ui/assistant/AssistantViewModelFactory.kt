@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.erickjuarez.rickandmorty.domain.model.AssistantPersona
 import com.erickjuarez.rickandmorty.domain.repository.AssistantRepository
+import com.erickjuarez.rickandmorty.domain.repository.ChatHistoryRepository
 
 class AssistantViewModelFactory(
     private val assistantRepository: AssistantRepository,
     private val textProvider: AssistantTextProvider,
-    private val persona: AssistantPersona
+    private val persona: AssistantPersona,
+    private val chatHistoryRepository: ChatHistoryRepository
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
@@ -19,7 +21,8 @@ class AssistantViewModelFactory(
             return AssistantViewModel(
                 assistantRepository = assistantRepository,
                 textProvider = textProvider,
-                persona = persona
+                persona = persona,
+                chatHistoryRepository = chatHistoryRepository
             ) as T
         }
 

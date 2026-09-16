@@ -40,6 +40,7 @@ class MainActivity : ComponentActivity() {
                 RickAndMortyNavHost(
                     characterListViewModel = characterListViewModel,
                     assistantRepositoryProvider = appContainer::assistantRepository,
+                    chatHistoryRepository = appContainer.chatHistoryRepository,
                     assistantPersona = assistantPersona,
                     onPreviousAssistant = {
                         assistantPersonaName = assistantPersona.previous().name

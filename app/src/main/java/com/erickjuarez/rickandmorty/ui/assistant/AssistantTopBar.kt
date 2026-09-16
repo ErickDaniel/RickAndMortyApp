@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -34,6 +35,7 @@ private val AssistantDividerColor = Color(0xFF1D303B)
 fun AssistantTopBar(
     persona: AssistantPersona,
     onBackClick: () -> Unit,
+    onHistoryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -86,6 +88,17 @@ fun AssistantTopBar(
                             R.string.navigate_back
                         ),
                         tint = Color.White
+                    )
+                }
+            },
+            actions = {
+                IconButton(onClick = onHistoryClick) {
+                    Icon(
+                        imageVector = Icons.Outlined.History,
+                        contentDescription = stringResource(
+                            R.string.chat_history_title
+                        ),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             },

@@ -33,6 +33,7 @@ fun AssistantChatScreen(
     onSendClick: () -> Unit,
     onErrorShown: () -> Unit,
     onBackClick: () -> Unit,
+    onHistoryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
@@ -59,7 +60,8 @@ fun AssistantChatScreen(
         topBar = {
             AssistantTopBar(
                 persona = persona,
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
+                onHistoryClick = onHistoryClick
             )
         },
         snackbarHost = {
