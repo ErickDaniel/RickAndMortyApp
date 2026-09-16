@@ -8,7 +8,9 @@ sealed interface CharacterListUiState {
     data class Success(
         val characters: List<Character>,
         val searchQuery: String = "",
-        val selectedStatus: CharacterStatusFilter = CharacterStatusFilter.All
+        val selectedStatus: CharacterStatusFilter = CharacterStatusFilter.All,
+        val selectedOrigin: String? = null,
+        val availableOrigins: List<String> = emptyList()
     ): CharacterListUiState
 
     data class Error(

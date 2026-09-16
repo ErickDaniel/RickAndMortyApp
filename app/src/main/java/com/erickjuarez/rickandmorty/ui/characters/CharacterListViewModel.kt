@@ -31,6 +31,7 @@ class CharacterListViewModel(
     private var allCharacters = emptyList<com.erickjuarez.rickandmorty.domain.model.Character>()
     private var searchQuery = ""
     private var selectedStatus = CharacterStatusFilter.All
+    private var selectedOrigin: String? = null
 
     //First fetch
     init {
@@ -47,8 +48,9 @@ class CharacterListViewModel(
         publishFilteredCharacters()
     }
 
-    fun onStatusFilterChange(status: CharacterStatusFilter) {
+    fun onFiltersApply(status: CharacterStatusFilter, origin: String?) {
         selectedStatus = status
+        selectedOrigin = origin
         publishFilteredCharacters()
     }
 
@@ -79,14 +81,21 @@ class CharacterListViewModel(
             val matchesName = character.name.contains(searchQuery.trim(), ignoreCase = true)
             val matchesStatus = selectedStatus == CharacterStatusFilter.All ||
                 character.status.equals(selectedStatus.name, ignoreCase = true)
+            val matchesOrigin = selectedOrigin == null ||
+                character.originName.equals(selectedOrigin, ignoreCase = true)
 
-            matchesName && matchesStatus
+            matchesName && matchesStatus && matchesOrigin
         }
 
         _uiState.value = CharacterListUiState.Success(
             characters = filteredCharacters,
             searchQuery = searchQuery,
-            selectedStatus = selectedStatus
+            selectedStatus = selectedStatus,
+            selectedOrigin = selectedOrigin,
+            availableOrigins = allCharacters
+                .map { it.originName }
+                .distinctBy { it.lowercase() }
+                .sortedWith(String.CASE_INSENSITIVE_ORDER)
         )
     }
 }

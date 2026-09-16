@@ -84,6 +84,18 @@ fun CharacterListItem(
                     status = character.status,
                     modifier = Modifier.padding(top = 8.dp)
                 )
+
+                Text(
+                    text = stringResource(
+                        R.string.character_origin,
+                        character.originName
+                    ),
+                    modifier = Modifier.padding(top = 6.dp),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }

@@ -13,8 +13,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -23,10 +25,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,7 +58,7 @@ fun CharacterList(
         uiState = uiState,
         onRetry = viewModel::retry,
         onSearchQueryChange = viewModel::onSearchQueryChange,
-        onStatusFilterChange = viewModel::onStatusFilterChange,
+        onFiltersApply = viewModel::onFiltersApply,
         onAskRickAndMortyClick = onAskRickAndMortyClick,
         modifier = modifier
     )
@@ -66,7 +70,7 @@ fun CharacterListScreen(
     uiState: CharacterListUiState,
     onRetry: () -> Unit,
     onSearchQueryChange: (String) -> Unit,
-    onStatusFilterChange: (CharacterStatusFilter) -> Unit,
+    onFiltersApply: (CharacterStatusFilter, String?) -> Unit,
     onAskRickAndMortyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -95,8 +99,10 @@ fun CharacterListScreen(
                 CharacterSearchAndFilterBar(
                     searchQuery = successState?.searchQuery.orEmpty(),
                     selectedStatus = successState?.selectedStatus ?: CharacterStatusFilter.All,
+                    selectedOrigin = successState?.selectedOrigin,
+                    availableOrigins = successState?.availableOrigins.orEmpty(),
                     onSearchQueryChange = onSearchQueryChange,
-                    onStatusFilterChange = onStatusFilterChange,
+                    onFiltersApply = onFiltersApply,
                     enabled = successState != null,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
@@ -141,12 +147,17 @@ fun CharacterListScreen(
 private fun CharacterSearchAndFilterBar(
     searchQuery: String,
     selectedStatus: CharacterStatusFilter,
+    selectedOrigin: String?,
+    availableOrigins: List<String>,
     onSearchQueryChange: (String) -> Unit,
-    onStatusFilterChange: (CharacterStatusFilter) -> Unit,
+    onFiltersApply: (CharacterStatusFilter, String?) -> Unit,
     enabled: Boolean,
     modifier: Modifier = Modifier
 ) {
-    var showStatusMenu by remember { mutableStateOf(false) }
+    var showFilterDialog by remember { mutableStateOf(false) }
+    var draftStatus by remember(selectedStatus) { mutableStateOf(selectedStatus) }
+    var draftOrigin by remember(selectedOrigin) { mutableStateOf(selectedOrigin) }
+    val filtersAreActive = selectedStatus != CharacterStatusFilter.All || selectedOrigin != null
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -175,21 +186,25 @@ private fun CharacterSearchAndFilterBar(
         ) {
             Surface(
                 shape = RoundedCornerShape(20.dp),
-                color = if (selectedStatus == CharacterStatusFilter.All) {
+                color = if (!filtersAreActive) {
                     MaterialTheme.colorScheme.surfaceVariant
                 } else {
                     MaterialTheme.colorScheme.primaryContainer
                 }
             ) {
                 IconButton(
-                    onClick = { showStatusMenu = true },
+                    onClick = {
+                        draftStatus = selectedStatus
+                        draftOrigin = selectedOrigin
+                        showFilterDialog = true
+                    },
                     enabled = enabled,
                     modifier = Modifier.size(56.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.FilterList,
                         contentDescription = stringResource(R.string.filter_characters),
-                        tint = if (selectedStatus == CharacterStatusFilter.All) {
+                        tint = if (!filtersAreActive) {
                             MaterialTheme.colorScheme.onSurfaceVariant
                         } else {
                             MaterialTheme.colorScheme.onPrimaryContainer
@@ -197,27 +212,132 @@ private fun CharacterSearchAndFilterBar(
                     )
                 }
             }
+        }
+    }
+
+    if (showFilterDialog) {
+        CharacterFiltersDialog(
+            selectedStatus = draftStatus,
+            selectedOrigin = draftOrigin,
+            availableOrigins = availableOrigins,
+            onStatusChange = { draftStatus = it },
+            onOriginChange = { draftOrigin = it },
+            onApply = {
+                onFiltersApply(draftStatus, draftOrigin)
+                showFilterDialog = false
+            },
+            onReset = {
+                onFiltersApply(CharacterStatusFilter.All, null)
+                showFilterDialog = false
+            },
+            onDismiss = { showFilterDialog = false }
+        )
+    }
+}
+
+@Composable
+private fun CharacterFiltersDialog(
+    selectedStatus: CharacterStatusFilter,
+    selectedOrigin: String?,
+    availableOrigins: List<String>,
+    onStatusChange: (CharacterStatusFilter) -> Unit,
+    onOriginChange: (String?) -> Unit,
+    onApply: () -> Unit,
+    onReset: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(R.string.filters_title)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                FilterDropdown(
+                    label = stringResource(R.string.filter_state_label),
+                    selectedOption = selectedStatus,
+                    options = CharacterStatusFilter.entries,
+                    optionLabel = { it.label() },
+                    onOptionSelected = onStatusChange
+                )
+
+                FilterDropdown(
+                    label = stringResource(R.string.filter_origin_label),
+                    selectedOption = selectedOrigin,
+                    options = listOf<String?>(null) + availableOrigins,
+                    optionLabel = { it ?: stringResource(R.string.filter_all_origins) },
+                    onOptionSelected = onOriginChange
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onApply) {
+                Text(text = stringResource(R.string.apply_filters))
+            }
+        },
+        dismissButton = {
+            Row {
+                TextButton(onClick = onReset) {
+                    Text(text = stringResource(R.string.reset_filters))
+                }
+                TextButton(onClick = onDismiss) {
+                    Text(text = stringResource(R.string.cancel))
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun <T> FilterDropdown(
+    label: String,
+    selectedOption: T,
+    options: List<T>,
+    optionLabel: @Composable (T) -> String,
+    onOptionSelected: (T) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Column {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 6.dp)
+        ) {
+            OutlinedButton(
+                onClick = { expanded = true },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = optionLabel(selectedOption),
+                        maxLines = 1
+                    )
+                    Icon(
+                        imageVector = Icons.Outlined.ArrowDropDown,
+                        contentDescription = null
+                    )
+                }
+            }
 
             DropdownMenu(
-                expanded = showStatusMenu,
-                onDismissRequest = { showStatusMenu = false }
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
             ) {
-                CharacterStatusFilter.entries.forEach { status ->
+                options.forEach { option ->
                     DropdownMenuItem(
-                        text = { Text(text = status.label()) },
+                        text = { Text(text = optionLabel(option)) },
                         onClick = {
-                            onStatusFilterChange(status)
-                            showStatusMenu = false
-                        },
-                        trailingIcon = if (status == selectedStatus) {
-                            {
-                                Text(
-                                    text = "✓",
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        } else {
-                            null
+                            onOptionSelected(option)
+                            expanded = false
                         }
                     )
                 }
@@ -330,24 +450,28 @@ private fun CharacterListPreview() {
                     id = 1,
                     name = "Rick Sanchez",
                     status = "Alive",
+                    originName = "Earth (C-137)",
                     imageUrl = ""
                 ),
                 Character(
                     id = 2,
                     name = "Morty Smith",
                     status = "Alive",
+                    originName = "unknown",
                     imageUrl = ""
                 ),
                 Character(
                     id = 3,
                     name = "Albert Einstein",
                     status = "Dead",
+                    originName = "Earth (C-137)",
                     imageUrl = ""
                 ),
                 Character(
                     id = 4,
                     name = "Alien Googah",
                     status = "unknown",
+                    originName = "unknown",
                     imageUrl = ""
                 )
             ),
@@ -365,6 +489,7 @@ private fun CharacterListItemPreview() {
                 id = 1,
                 name = "Rick Sanchez With A Very Long Character Name",
                 status = "Alive",
+                originName = "Earth (C-137)",
                 imageUrl = ""
             ),
             modifier = Modifier.padding(16.dp)
