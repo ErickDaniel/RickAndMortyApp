@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Rick &amp; Morty</string>
     <string name="characters_title">Characters</string>
+    <string name="home_title">RickAndMortyApp</string>
+    <string name="home_subtitle">Explore the multiverse</string>
+    <string name="search_characters">Search characters…</string>
+    <string name="filter_characters">Filter characters by status</string>
+    <string name="filter_all">All statuses</string>
+    <string name="filter_alive">Alive</string>
+    <string name="filter_dead">Dead</string>
+    <string name="filter_unknown">Unknown</string>
     <string name="loading_characters">Loading characters…</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="retry">Retry</string>

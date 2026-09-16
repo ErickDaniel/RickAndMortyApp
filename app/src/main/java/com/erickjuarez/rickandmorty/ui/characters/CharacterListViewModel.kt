@@ -28,6 +28,10 @@ class CharacterListViewModel(
     //Job to verify concurrency
     private var loadCharactersJob: Job? = null
 
+    private var allCharacters = emptyList<com.erickjuarez.rickandmorty.domain.model.Character>()
+    private var searchQuery = ""
+    private var selectedStatus = CharacterStatusFilter.All
+
     //First fetch
     init {
         loadCharacters()
@@ -36,6 +40,16 @@ class CharacterListViewModel(
     //For retries
     fun retry() {
         loadCharacters()
+    }
+
+    fun onSearchQueryChange(query: String) {
+        searchQuery = query
+        publishFilteredCharacters()
+    }
+
+    fun onStatusFilterChange(status: CharacterStatusFilter) {
+        selectedStatus = status
+        publishFilteredCharacters()
     }
 
     //Load Characters from endpoint, connected to Repository
@@ -48,11 +62,8 @@ class CharacterListViewModel(
             _uiState.value = CharacterListUiState.Loading
 
             try {
-                val characters = repository.getCharacters()
-
-                _uiState.value = CharacterListUiState.Success(
-                    characters = characters
-                )
+                allCharacters = repository.getCharacters()
+                publishFilteredCharacters()
             } catch (ex: CancellationException) {
                 throw ex
             } catch (_: Exception) {
@@ -61,5 +72,21 @@ class CharacterListViewModel(
                 )
             }
         }
+    }
+
+    private fun publishFilteredCharacters() {
+        val filteredCharacters = allCharacters.filter { character ->
+            val matchesName = character.name.contains(searchQuery.trim(), ignoreCase = true)
+            val matchesStatus = selectedStatus == CharacterStatusFilter.All ||
+                character.status.equals(selectedStatus.name, ignoreCase = true)
+
+            matchesName && matchesStatus
+        }
+
+        _uiState.value = CharacterListUiState.Success(
+            characters = filteredCharacters,
+            searchQuery = searchQuery,
+            selectedStatus = selectedStatus
+        )
     }
 }
