@@ -28,5 +28,9 @@
     <string name="navigate_back">Navigate back</string>
     <string name="assistant_placeholder">Ask something about Rick &amp; Morty</string>
     <string name="assistant_status">AI Assistant</string>
+    <string name="assistant_welcome_message">Hi! Ask me anything about Rick &amp; Morty.</string>
+    <string name="assistant_generic_error">Rick couldn’t answer right now.</string>
+    <string name="assistant_send_message">Send message</string>
+    <string name="assistant_referenced_characters">Referenced characters</string>
     <string name="rick_avatar_description">Rick assistant avatar</string>
 </resources>

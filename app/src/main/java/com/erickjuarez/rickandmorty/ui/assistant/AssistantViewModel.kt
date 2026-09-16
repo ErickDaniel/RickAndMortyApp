@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 
 class AssistantViewModel(
-    private val assistantRepository: AssistantRepository
+    private val assistantRepository: AssistantRepository,
+    private val textProvider: AssistantTextProvider
 ) : ViewModel() {
 
     private val conversationId = UUID.randomUUID().toString()
@@ -24,7 +25,7 @@ class AssistantViewModel(
             messages = listOf(
                 AssistantMessage(
                     id = 0L,
-                    text = "Hi! Ask me anything about Rick & Morty.",
+                    text = textProvider.welcomeMessage,
                     author = MessageAuthor.ASSISTANT
                 )
             )
@@ -67,15 +68,16 @@ class AssistantViewModel(
     private fun requestAssistantResponse(question: String) {
         viewModelScope.launch {
             try {
-                val response = assistantRepository.sendMessage(
+                val reply = assistantRepository.sendMessage(
                     conversationId = conversationId,
                     message = question
                 )
 
                 val assistantMessage = AssistantMessage(
                     id = nextMessageId++,
-                    text = response,
-                    author = MessageAuthor.ASSISTANT
+                    text = reply.text,
+                    author = MessageAuthor.ASSISTANT,
+                    referencedCharacters = reply.referencedCharacters
                 )
 
                 _uiState.update { currentState ->
@@ -86,12 +88,11 @@ class AssistantViewModel(
                 }
             } catch (exception: CancellationException) {
                 throw exception
-            } catch (exception: Exception) {
+            } catch (_: Exception) {
                 _uiState.update { currentState ->
                     currentState.copy(
                         isSending = false,
-                        errorMessage = exception.message
-                            ?: "Rick couldn't answer right now."
+                        errorMessage = textProvider.genericErrorMessage
                     )
                 }
             }

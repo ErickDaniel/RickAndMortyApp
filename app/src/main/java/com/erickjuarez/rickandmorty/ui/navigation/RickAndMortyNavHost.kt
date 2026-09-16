@@ -2,6 +2,7 @@ package com.erickjuarez.rickandmorty.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,6 +11,7 @@ import com.erickjuarez.rickandmorty.domain.repository.AssistantRepository
 import com.erickjuarez.rickandmorty.ui.assistant.AssistantChatRoute
 import com.erickjuarez.rickandmorty.ui.assistant.AssistantViewModel
 import com.erickjuarez.rickandmorty.ui.assistant.AssistantViewModelFactory
+import com.erickjuarez.rickandmorty.ui.assistant.ResourceAssistantTextProvider
 import com.erickjuarez.rickandmorty.ui.characters.CharacterList
 import com.erickjuarez.rickandmorty.ui.characters.CharacterListViewModel
 
@@ -38,9 +40,13 @@ fun RickAndMortyNavHost(
         }
 
         composable(AppRoutes.ASSISTANT) {
+            val context = LocalContext.current
             val assistantViewModel: AssistantViewModel = viewModel(
                 factory = AssistantViewModelFactory(
-                    assistantRepository = assistantRepository
+                    assistantRepository = assistantRepository,
+                    textProvider = ResourceAssistantTextProvider(
+                        context.applicationContext
+                    )
                 )
             )
 

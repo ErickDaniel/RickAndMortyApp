@@ -110,13 +110,14 @@ class RickAndMortyTool(
         )
     }
 
-    private companion object {
-        const val HTTP_NOT_FOUND = 404
+    companion object {
         const val NAME = "search_characters"
-        const val ARG_NAME = "name"
-        const val ARG_STATUS = "status"
-        const val ARG_PAGE = "page"
 
-        val VALID_STATUSES = setOf("alive", "dead", "unknown")
+        private const val HTTP_NOT_FOUND = 404
+        private const val ARG_NAME = "name"
+        private const val ARG_STATUS = "status"
+        private const val ARG_PAGE = "page"
+
+        private val VALID_STATUSES = setOf("alive", "dead", "unknown")
     }
 }

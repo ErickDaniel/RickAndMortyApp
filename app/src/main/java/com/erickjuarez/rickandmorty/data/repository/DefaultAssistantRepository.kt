@@ -1,6 +1,9 @@
 package com.erickjuarez.rickandmorty.data.repository
 
 import com.erickjuarez.rickandmorty.data.assistant.RickAssistantAgent
+import com.erickjuarez.rickandmorty.data.assistant.RickAndMortyTool
+import com.erickjuarez.rickandmorty.domain.model.AssistantReply
+import com.erickjuarez.rickandmorty.domain.model.Character
 import com.erickjuarez.rickandmorty.domain.repository.AssistantRepository
 import com.erickjuarez.rickandmorty.domain.repository.ICharacterRepository
 import com.google.adk.kt.agents.RunConfig
@@ -32,8 +35,9 @@ class DefaultAssistantRepository(
     override suspend fun sendMessage(
         conversationId: String,
         message: String
-    ): String {
+    ): AssistantReply {
         val response = StringBuilder()
+        val referencedCharacters = linkedMapOf<Int, Character>()
 
         runner.runAsync(
             userId = USER_ID,
@@ -55,9 +59,18 @@ class DefaultAssistantRepository(
             if (event.author == RickAssistantAgent.NAME) {
                 response.append(event.visibleText())
             }
+
+            event.functionResponses()
+                .filter { it.name == RickAndMortyTool.NAME }
+                .forEach { functionResponse ->
+                    functionResponse.response.characters()
+                        .forEach { character ->
+                            referencedCharacters[character.id] = character
+                        }
+                }
         }
 
-        return response
+        val responseText = response
             .toString()
             .trim()
             .ifBlank {
@@ -65,6 +78,11 @@ class DefaultAssistantRepository(
                     "The assistant returned an empty response."
                 )
             }
+
+        return AssistantReply(
+            text = responseText,
+            referencedCharacters = referencedCharacters.values.toList()
+        )
     }
 
     private fun Event.visibleText(): String {
@@ -74,6 +92,26 @@ class DefaultAssistantRepository(
             .filter { part -> part.thought != true }
             .mapNotNull { part -> part.text }
             .joinToString(separator = "")
+    }
+
+    private fun Map<String, Any?>.characters(): List<Character> {
+        return (this["characters"] as? List<*>)
+            .orEmpty()
+            .mapNotNull { item ->
+                val character = item as? Map<*, *> ?: return@mapNotNull null
+                val id = (character["id"] as? Number)?.toInt()
+                    ?: return@mapNotNull null
+                val name = character["name"] as? String
+                    ?: return@mapNotNull null
+
+                Character(
+                    id = id,
+                    name = name,
+                    status = character["status"] as? String ?: "unknown",
+                    originName = character["origin"] as? String ?: "unknown",
+                    imageUrl = character["image_url"] as? String ?: ""
+                )
+            }
     }
 
     private companion object {

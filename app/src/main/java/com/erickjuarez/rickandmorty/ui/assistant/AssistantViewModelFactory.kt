@@ -5,7 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.erickjuarez.rickandmorty.domain.repository.AssistantRepository
 
 class AssistantViewModelFactory(
-    private val assistantRepository: AssistantRepository
+    private val assistantRepository: AssistantRepository,
+    private val textProvider: AssistantTextProvider
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
@@ -14,7 +15,8 @@ class AssistantViewModelFactory(
     ): T {
         if (modelClass.isAssignableFrom(AssistantViewModel::class.java)) {
             return AssistantViewModel(
-                assistantRepository = assistantRepository
+                assistantRepository = assistantRepository,
+                textProvider = textProvider
             ) as T
         }
 
