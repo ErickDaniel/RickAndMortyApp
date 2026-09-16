@@ -33,12 +33,14 @@ import com.erickjuarez.rickandmorty.domain.model.Character
 @Composable
 fun CharacterListItem(
     character: Character,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val placeholderColor = MaterialTheme.colorScheme.surfaceVariant
     val imageErrorColor = MaterialTheme.colorScheme.errorContainer
 
     Card(
+        onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
@@ -83,6 +85,18 @@ fun CharacterListItem(
                 CharacterStatus(
                     status = character.status,
                     modifier = Modifier.padding(top = 8.dp)
+                )
+
+                Text(
+                    text = stringResource(
+                        R.string.character_origin,
+                        character.originName
+                    ),
+                    modifier = Modifier.padding(top = 6.dp),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

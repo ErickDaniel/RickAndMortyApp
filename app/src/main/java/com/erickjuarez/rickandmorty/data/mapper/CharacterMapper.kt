@@ -8,6 +8,7 @@ fun CharacterDto.toDomain(): Character {
         id = id,
         name = name,
         status = status,
+        originName = origin.name,
         imageUrl = imageUrl
     )
 }
