@@ -12,9 +12,14 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.erickjuarez.rickandmorty.domain.model.Character
+import com.erickjuarez.rickandmorty.ui.components.CharacterIdentityDialog
 
 @Composable
 fun AssistantChatScreen(
@@ -30,6 +35,7 @@ fun AssistantChatScreen(
 ) {
     val listState = rememberLazyListState()
     val snackbarHostState = remember { SnackbarHostState() }
+    var selectedCharacter by remember { mutableStateOf<Character?>(null) }
 
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) {
@@ -85,6 +91,9 @@ fun AssistantChatScreen(
                 ) { message ->
                     AssistantMessageItem(
                         message = message,
+                        onCharacterClick = { character ->
+                            selectedCharacter = character
+                        },
                         modifier = Modifier.padding(
                             bottom = 14.dp
                         )
@@ -92,5 +101,12 @@ fun AssistantChatScreen(
                 }
             }
         }
+    }
+
+    selectedCharacter?.let { character ->
+        CharacterIdentityDialog(
+            character = character,
+            onDismiss = { selectedCharacter = null }
+        )
     }
 }

@@ -24,6 +24,13 @@
     <string name="no_characters_found">No characters found</string>
     <string name="character_image_description">Image of %1$s</string>
     <string name="character_origin">Origin: %1$s</string>
+    <string name="character_identity_title">Interdimensional ID</string>
+    <string name="character_identity_number">File #%1$04d</string>
+    <string name="character_identity_status">Status</string>
+    <string name="character_identity_origin">Origin</string>
+    <string name="character_identity_verified">Identity verified</string>
+    <string name="character_identity_database">Citadel central database</string>
+    <string name="character_identity_close">Close character identification</string>
     <string name="ask_rick_and_morty">Ask Rick &amp; Morty</string>
     <string name="navigate_back">Navigate back</string>
     <string name="assistant_placeholder">Ask something about Rick &amp; Morty</string>

@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.erickjuarez.rickandmorty.R
 import com.erickjuarez.rickandmorty.domain.model.Character
+import com.erickjuarez.rickandmorty.ui.components.CharacterIdentityDialog
 import com.erickjuarez.rickandmorty.ui.theme.RickAndMortyTheme
 
 @Composable
@@ -77,6 +78,8 @@ fun CharacterListScreen(
     onAskRickAndMortyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var selectedCharacter by remember { mutableStateOf<Character?>(null) }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -135,7 +138,10 @@ fun CharacterListScreen(
                             isLoadingMore = uiState.isLoadingMore,
                             hasNextPage = uiState.hasNextPage,
                             loadMoreFailed = uiState.loadMoreFailed,
-                            onLoadNextPage = onLoadNextPage
+                            onLoadNextPage = onLoadNextPage,
+                            onCharacterClick = { character ->
+                                selectedCharacter = character
+                            }
                         )
                     }
                 }
@@ -147,6 +153,13 @@ fun CharacterListScreen(
                 }
             }
         }
+    }
+
+    selectedCharacter?.let { character ->
+        CharacterIdentityDialog(
+            character = character,
+            onDismiss = { selectedCharacter = null }
+        )
     }
 }
 
@@ -430,6 +443,7 @@ fun CharacterListContent(
     hasNextPage: Boolean = false,
     loadMoreFailed: Boolean = false,
     onLoadNextPage: () -> Unit = {},
+    onCharacterClick: (Character) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -445,7 +459,8 @@ fun CharacterListContent(
             }
         ) { character ->
             CharacterListItem(
-                character = character
+                character = character,
+                onClick = { onCharacterClick(character) }
             )
         }
 
