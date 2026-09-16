@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,6 +60,7 @@ fun CharacterList(
         onRetry = viewModel::retry,
         onSearchQueryChange = viewModel::onSearchQueryChange,
         onFiltersApply = viewModel::onFiltersApply,
+        onLoadNextPage = viewModel::loadNextPage,
         onAskRickAndMortyClick = onAskRickAndMortyClick,
         modifier = modifier
     )
@@ -71,6 +73,7 @@ fun CharacterListScreen(
     onRetry: () -> Unit,
     onSearchQueryChange: (String) -> Unit,
     onFiltersApply: (CharacterStatusFilter, String?) -> Unit,
+    onLoadNextPage: () -> Unit,
     onAskRickAndMortyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -128,7 +131,11 @@ fun CharacterListScreen(
                         EmptyContent()
                     } else {
                         CharacterListContent(
-                            characters = uiState.characters
+                            characters = uiState.characters,
+                            isLoadingMore = uiState.isLoadingMore,
+                            hasNextPage = uiState.hasNextPage,
+                            loadMoreFailed = uiState.loadMoreFailed,
+                            onLoadNextPage = onLoadNextPage
                         )
                     }
                 }
@@ -419,6 +426,10 @@ fun EmptyContent(
 @Composable
 fun CharacterListContent(
     characters: List<Character>,
+    isLoadingMore: Boolean = false,
+    hasNextPage: Boolean = false,
+    loadMoreFailed: Boolean = false,
+    onLoadNextPage: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -436,6 +447,59 @@ fun CharacterListContent(
             CharacterListItem(
                 character = character
             )
+        }
+
+        if (hasNextPage || isLoadingMore || loadMoreFailed) {
+            item(key = "pagination_footer") {
+                PaginationFooter(
+                    characterCount = characters.size,
+                    isLoadingMore = isLoadingMore,
+                    hasNextPage = hasNextPage,
+                    loadMoreFailed = loadMoreFailed,
+                    onLoadNextPage = onLoadNextPage
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PaginationFooter(
+    characterCount: Int,
+    isLoadingMore: Boolean,
+    hasNextPage: Boolean,
+    loadMoreFailed: Boolean,
+    onLoadNextPage: () -> Unit
+) {
+    if (hasNextPage && !isLoadingMore && !loadMoreFailed) {
+        LaunchedEffect(characterCount, hasNextPage) {
+            onLoadNextPage()
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 20.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        when {
+            isLoadingMore -> {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator(modifier = Modifier.size(28.dp))
+                    Text(
+                        text = stringResource(R.string.loading_more_characters),
+                        modifier = Modifier.padding(top = 8.dp),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+            loadMoreFailed -> {
+                TextButton(onClick = onLoadNextPage) {
+                    Text(text = stringResource(R.string.retry_load_more))
+                }
+            }
         }
     }
 }

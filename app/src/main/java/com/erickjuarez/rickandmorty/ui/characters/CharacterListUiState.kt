@@ -10,7 +10,10 @@ sealed interface CharacterListUiState {
         val searchQuery: String = "",
         val selectedStatus: CharacterStatusFilter = CharacterStatusFilter.All,
         val selectedOrigin: String? = null,
-        val availableOrigins: List<String> = emptyList()
+        val availableOrigins: List<String> = emptyList(),
+        val isLoadingMore: Boolean = false,
+        val hasNextPage: Boolean = true,
+        val loadMoreFailed: Boolean = false
     ): CharacterListUiState
 
     data class Error(
