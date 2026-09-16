@@ -24,6 +24,13 @@
     <string name="no_characters_found">No se encontraron personajes</string>
     <string name="character_image_description">Imagen de %1$s</string>
     <string name="character_origin">Origen: %1$s</string>
+    <string name="character_identity_title">ID interdimensional</string>
+    <string name="character_identity_number">Expediente #%1$04d</string>
+    <string name="character_identity_status">Estado</string>
+    <string name="character_identity_origin">Origen</string>
+    <string name="character_identity_verified">Identidad verificada</string>
+    <string name="character_identity_database">Base de datos central de la Ciudadela</string>
+    <string name="character_identity_close">Cerrar identificación del personaje</string>
     <string name="ask_rick_and_morty">Pregunta a Rick &amp; Morty</string>
     <string name="navigate_back">Navegar hacia atras</string>
     <string name="assistant_placeholder">Pregunta algo acerca de Rick &amp; Morty</string>

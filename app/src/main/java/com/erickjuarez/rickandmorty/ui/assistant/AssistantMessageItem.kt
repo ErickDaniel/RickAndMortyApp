@@ -33,6 +33,7 @@ import com.erickjuarez.rickandmorty.domain.model.Character
 @Composable
 fun AssistantMessageItem(
     message: AssistantMessage,
+    onCharacterClick: (Character) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     when (message.author) {
@@ -47,6 +48,7 @@ fun AssistantMessageItem(
             RickMessage(
                 text = message.text,
                 referencedCharacters = message.referencedCharacters,
+                onCharacterClick = onCharacterClick,
                 modifier = modifier
             )
         }
@@ -91,6 +93,7 @@ private fun UserMessage(
 private fun RickMessage(
     text: String,
     referencedCharacters: List<Character>,
+    onCharacterClick: (Character) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -133,6 +136,7 @@ private fun RickMessage(
             if (referencedCharacters.isNotEmpty()) {
                 ReferencedCharacters(
                     characters = referencedCharacters,
+                    onCharacterClick = onCharacterClick,
                     modifier = Modifier.padding(top = 10.dp)
                 )
             }
@@ -143,6 +147,7 @@ private fun RickMessage(
 @Composable
 private fun ReferencedCharacters(
     characters: List<Character>,
+    onCharacterClick: (Character) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -162,7 +167,10 @@ private fun ReferencedCharacters(
                 items = characters,
                 key = { character -> character.id }
             ) { character ->
-                ReferencedCharacterCard(character = character)
+                ReferencedCharacterCard(
+                    character = character,
+                    onClick = { onCharacterClick(character) }
+                )
             }
         }
     }
@@ -171,9 +179,11 @@ private fun ReferencedCharacters(
 @Composable
 private fun ReferencedCharacterCard(
     character: Character,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
+        onClick = onClick,
         modifier = modifier.width(210.dp),
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(
