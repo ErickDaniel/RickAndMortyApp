@@ -30,7 +30,8 @@ fun MarkdownText(
     val codeBackground = MaterialTheme.colorScheme.surfaceVariant
     val uriHandler = LocalUriHandler.current
     val annotatedText = remember(markdown, linkColor, codeBackground) {
-        markdown.toAnnotatedString(
+        parseMarkdown(
+            markdown = markdown,
             linkColor = linkColor,
             codeBackground = codeBackground
         )
@@ -58,11 +59,12 @@ fun MarkdownText(
     )
 }
 
-private fun String.toAnnotatedString(
+internal fun parseMarkdown(
+    markdown: String,
     linkColor: Color,
     codeBackground: Color
 ): AnnotatedString = buildAnnotatedString {
-    val lines = replace("\r\n", "\n").split("\n")
+    val lines = markdown.replace("\r\n", "\n").split("\n")
 
     lines.forEachIndexed { index, line ->
         val unorderedItem = UNORDERED_LIST_PATTERN.matchEntire(line)

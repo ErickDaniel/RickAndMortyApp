@@ -45,7 +45,9 @@ class RickAndMortyTool(
     override suspend fun execute(
         context: ToolContext,
         args: Map<String, Any?>
-    ): Any {
+    ): Any = executeSearch(args)
+
+    internal suspend fun executeSearch(args: Map<String, Any?>): Map<String, Any?> {
         val requestedName = (args[ARG_NAME] as? String)
             ?.trim()
             ?.takeIf { it.isNotEmpty() }

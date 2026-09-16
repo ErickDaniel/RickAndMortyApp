@@ -63,7 +63,7 @@ class DefaultAssistantRepository(
             event.functionResponses()
                 .filter { it.name == RickAndMortyTool.NAME }
                 .forEach { functionResponse ->
-                    functionResponse.response.characters()
+                    functionResponse.response.toCharacters()
                         .forEach { character ->
                             referencedCharacters[character.id] = character
                         }
@@ -94,28 +94,28 @@ class DefaultAssistantRepository(
             .joinToString(separator = "")
     }
 
-    private fun Map<String, Any?>.characters(): List<Character> {
-        return (this["characters"] as? List<*>)
-            .orEmpty()
-            .mapNotNull { item ->
-                val character = item as? Map<*, *> ?: return@mapNotNull null
-                val id = (character["id"] as? Number)?.toInt()
-                    ?: return@mapNotNull null
-                val name = character["name"] as? String
-                    ?: return@mapNotNull null
-
-                Character(
-                    id = id,
-                    name = name,
-                    status = character["status"] as? String ?: "unknown",
-                    originName = character["origin"] as? String ?: "unknown",
-                    imageUrl = character["image_url"] as? String ?: ""
-                )
-            }
-    }
-
     private companion object {
         const val APP_NAME = "RickAndMortyApp"
         const val USER_ID = "android_user"
     }
+}
+
+internal fun Map<String, Any?>.toCharacters(): List<Character> {
+    return (this["characters"] as? List<*>)
+        .orEmpty()
+        .mapNotNull { item ->
+            val character = item as? Map<*, *> ?: return@mapNotNull null
+            val id = (character["id"] as? Number)?.toInt()
+                ?: return@mapNotNull null
+            val name = character["name"] as? String
+                ?: return@mapNotNull null
+
+            Character(
+                id = id,
+                name = name,
+                status = character["status"] as? String ?: "unknown",
+                originName = character["origin"] as? String ?: "unknown",
+                imageUrl = character["image_url"] as? String ?: ""
+            )
+        }
 }
